@@ -18,10 +18,10 @@ data = data(:, ecg_column); % Extract ECG data from the specified column
 data = data(isfinite(data)); % Remove NaN values
 data = data(:);
 % Apply bandpass filter
-[b, a] = butter(5, [5 / (fs / 2), 15 / (fs / 2)], 'bandpass'); % Filter coefficients
+[b, a] = butter(5, [5 / (fs / 2), 12 / (fs / 2)], 'bandpass'); % Filter coefficients
 filtered_data = filtfilt(b, a, data);
 % Differentiation filter
-derivative_filter = [1 2 0 -2 -1] .* (1 / 8) * fs;
+derivative_filter = [-1 -2 0 2 1] .* (1 / 8) * fs;% Modified to match the original paper notation [-1 -2 0 2 1]; the previous implementation [1 2 0 -2 -1] was equally correct (only sign inverted).
 differentiated_data = filtfilt(derivative_filter, 1, filtered_data);
 % Squaring and moving average
 squared_data = differentiated_data .^ 2;
